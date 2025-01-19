@@ -1,0 +1,215 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-size: cover;
+    padding-top: 50px;
+}
+
+.header {
+    top: 0;
+    height: 50px;
+    background-color: #8d99ae;
+    color: #2b2d42;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    position: fixed;
+    z-index: 999;
+}
+
+.header a {
+    text-decoration: none;
+    padding-right: 50px;
+    font-weight: bold;
+    color: #2b2d42;
+    font-size: 20px;
+    transition: 0.3s ease;
+}
+
+.header a:hover,
+.header a.active {
+    color: #edf2f4;
+}
+
+
+/* .header a.active::after {
+    content: "";
+    width: 30px;
+    height: 2px;
+    background-color: skyblue;
+    position: absolute;
+    bottom: -4px;
+} */
+
+.header .logo {
+    padding-right: 200px;
+    font-size: 32px;
+    margin-right: 200px;
+}
+
+
+/*Registration*/
+
+.form-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    padding-bottom: 60px;
+    background: #eee;
+}
+
+.form-container form {
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
+    background: #fff;
+    text-align: center;
+    width: 500px;
+}
+
+.form-container form h3 {
+    font-size: 30px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.form-container form input,
+.form-container form select {
+    width: 80%;
+    padding: 10px 15px;
+    font-size: 17px;
+    margin: 8px 0;
+    background: #eee;
+    border-radius: 5px;
+}
+
+.form-container form select option {
+    background: #fff;
+}
+
+.form-container form .form-btm {
+    background: #fbd0d9;
+    color: crimson;
+    text-transform: capitalize;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.form-container form .form-btm:hover {
+    background: crimson;
+    color: #fff;
+}
+
+.form-container form h5 {
+    margin-top: 10px;
+    font-size: 20px;
+    color: #333;
+}
+
+.form-container form h5 a {
+    color: crimson;
+}
+
+
+/*footer*/
+
+.footer-container {
+    width: 100%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    background-color: #8d99ae;
+    color: #2b2d42;
+}
+
+.footer-content {
+    width: 33.3%;
+}
+
+footer h3 {
+    font-size: 28px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.footer-content p {
+    width: 190px;
+    margin: auto;
+    padding: 7px;
+}
+
+.footer-content ul {
+    text-align: center;
+}
+
+.footer-container .list {
+    padding: 0;
+}
+
+.footer-container .list li {
+    width: auto;
+    text-align: center;
+    list-style-type: none;
+    padding: 7px;
+    position: relative;
+}
+
+section.left .socialMedia {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 22px 0px 20px;
+}
+
+.socialMedia a {
+    width: 35px;
+    height: 35px;
+    text-decoration: none;
+    text-align: center;
+    margin-right: 15px;
+    border-radius: 5px;
+    transition: 0.4s;
+}
+
+.socialMedia a i {
+    color: #2b2d42;
+    font-size: 18px;
+    line-height: 35px;
+    border: 1px solid transparent;
+    transition-delay: 0.4s;
+}
+
+.footer-container a {
+    text-decoration: none;
+    color: #2b2d42;
+}
+
+.footer-container a:hover {
+    color: #edf2f4;
+}
+
+.social-icons i:hover {
+    color: #edf2f4;
+}
+
+.bottom-bar {
+    background: #2b2d42;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.bottom-bar p {
+    color: #8d99ae;
+    margin: 0;
+    font-size: 16px;
+    padding: 7px;
+}
