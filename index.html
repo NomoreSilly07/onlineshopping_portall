@@ -17,6 +17,81 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,400;0,500;0,600;0,800;1,900&display=swap"
       rel="stylesheet"
     />
+    <style>
+      /* Responsive Styles */
+
+      @media (max-width: 1024px) {
+        .header {
+          height: auto;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 10px 0;
+        }
+        .header a {
+          padding: 10px;
+          font-size: 18px;
+        }
+        .container {
+          padding: 0 40px;
+        }
+        .container h1 {
+          font-size: 50px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .header {
+          flex-direction: column;
+        }
+        .container {
+          padding: 0 20px;
+          text-align: center;
+          align-items: center;
+        }
+        .container h1 {
+          font-size: 40px;
+        }
+        #laptop .pro-container {
+          flex-direction: column;
+          align-items: center;
+        }
+        #laptop .pro {
+          width: 80%;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header a {
+          font-size: 16px;
+          padding: 5px;
+        }
+        .container h1 {
+          font-size: 30px;
+        }
+        .container h2 {
+          font-size: 24px;
+        }
+        .container h4 {
+          font-size: 20px;
+        }
+        .container button {
+          padding: 10px 50px;
+          font-size: 14px;
+        }
+        #laptop .pro {
+          width: 100%;
+        }
+        .footer-container {
+          flex-direction: column;
+          align-items: center;
+        }
+        .footer-content {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    </style>
   </head>
 
   <body>
@@ -32,6 +107,16 @@
         <a href="login_form.php">Login</a>
       </div>
     </nav>
+
+    <!--conetent of the website-->
+    <div class="container">
+      <h4>The-Perfect-Series-Experience</h4>
+      <h2>Get Super value deals</h2>
+      <h1>On all Laptops</h1>
+      <p>Save more with coupons & up to 30% off!</p>
+      <button>Order Now</button>
+    </div>
+
     <!--Product-->
     <div id="laptop" class="section-p1">
       <h2>Top 6 Best Laptops</h2>
