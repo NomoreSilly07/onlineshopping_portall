@@ -1,110 +1,96 @@
 <?php
-
 @include 'config.php';
-
 session_start();
 
 if(isset($_POST['submit'])){
+   $email = $_POST['email'];
+   $password = $_POST['password'];
 
-   $name = mysqli_real_escape_string($conn, $_POST['name']);
-   $email = mysqli_real_escape_string($conn, $_POST['email']);
-   $pass = md5($_POST['password']);
-   $cpass = md5($_POST['cpassword']);
-   $user_type = $_POST['user_type'];
+   // Prepared statement to prevent SQL Injection
+   $stmt = $conn->prepare("SELECT * FROM user_form WHERE email = ?");
+   $stmt->bind_param("s", $email);
+   $stmt->execute();
+   $result = $stmt->get_result();
 
-   $select = " SELECT * FROM user_form WHERE email = '$email' && password = '$pass' ";
+   if($result->num_rows > 0){
+      $row = $result->fetch_assoc();
 
-   $result = mysqli_query($conn, $select);
-
-   if(mysqli_num_rows($result) > 0){
-
-      $row = mysqli_fetch_array($result);
-
-      if($row['user_type'] == 'admin'){
-
-         $_SESSION['admin_name'] = $row['name'];
-         header('location:admin_page.php');
-
-      }elseif($row['user_type'] == 'user'){
-
-         $_SESSION['user_name'] = $row['name'];
-         header('location:user_page.php');
-
+      // Verify password securely
+      if(password_verify($password, $row['password'])){
+         if($row['user_type'] == 'admin'){
+            $_SESSION['admin_name'] = $row['name'];
+            header('Location: admin_page.php');
+            exit;
+         } else {
+            $_SESSION['user_name'] = $row['name'];
+            header('Location: user_page.php');
+            exit;
+         }
+      } else {
+         $error = "Incorrect email or password!";
       }
-     
-   }else{
-      $error[] = 'incorrect email or password!';
+   } else {
+      $error = "Incorrect email or password!";
    }
-
-};
+   $stmt->close();
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EarGearHUb</title>
-    <link rel="stylesheet" href="style.css">
 <head>
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>admin panel</title>
+   <title>EarGearHub - Admin Panel</title>
 
-   <!-- font awesome cdn link  -->
+   <!-- Font Awesome for icons -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-   <!-- custom admin css file link  -->
+   <!-- Custom Admin CSS -->
    <link rel="stylesheet" href="admin_style.css">
-
 </head>
 <body>
-   
-<?php include 'admin_header.php'; ?>
 
-<!-- admin dashboard section starts  -->
-
-<section class="dashboard">
-
-   <h1 class="title">dashboard</h1>
-
-   <div class="box-container">
-   <div class="box">
-         <?php 
-            $select_products = mysqli_query($conn, "SELECT * FROM `products`") or die('query failed');
-            $number_of_products = mysqli_num_rows($select_products);
-         ?>
-         <h3><?php echo $number_of_products; ?></h3>
-         <p>products added</p>
+   <nav>
+      <div class="header">
+         <a href="admin_page.php" class="active">Admin Panel</a>
+         <a href="admin_products.php">Products</a>
+         <a href="product_orders.php">Orders</a>
+         <a href="admin_contacts.php">Messages</a>
+         <a href="admin_user.php">Users</a>
+         <a href="logout.php" class="delete-btn">Logout</a>
       </div>
+   </nav>
 
-      <div class="box">
-         <?php 
-            $select_account = mysqli_query($conn, "SELECT * FROM `users`") or die('query failed');
-            $number_of_account = mysqli_num_rows($select_account);
-         ?>
-         <h3><?php echo $number_of_account; ?></h3>
-         <p>total accounts</p>
+   <!-- Admin Dashboard -->
+   <section class="dashboard">
+      <h1 class="title">Dashboard</h1>
+      <div class="box-container">
+         <div class="box">
+            <?php 
+               $select_products = mysqli_query($conn, "SELECT * FROM `products`") or die('Query Failed');
+               $number_of_products = mysqli_num_rows($select_products);
+            ?>
+            <h3><?php echo $number_of_products; ?></h3>
+            <p>Products Added</p>
+         </div>
+
+         <div class="box">
+            <?php 
+               $select_accounts = mysqli_query($conn, "SELECT * FROM `user_form`") or die('Query Failed');
+               $number_of_accounts = mysqli_num_rows($select_accounts);
+            ?>
+            <h3><?php echo $number_of_accounts; ?></h3>
+            <p>Total Accounts</p>
+         </div>
       </div>
+   </section>
 
-   
-   </div>
-
-</section>
-
-<!-- admin dashboard section ends -->
-
-
-
-
-
-
-
-
-
-<!-- custom admin js file link  -->
-<script src="admin_script.js"></script>
+   <script src="admin_script.js"></script>
+   <footer>
+      <p>&copy; 2025 EarGearHub - Admin Panel</p>
+   </footer>
 
 </body>
 </html>

@@ -1,15 +1,3 @@
-<?php
-
-@include 'config.php';
-
-session_start();
-
-if(!isset($_SESSION['user_name'])){
-   header('location:login_form.php');
-}
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,13 +17,14 @@ if(!isset($_SESSION['user_name'])){
         <div class="header">
             <a href="index.php" class="logo">EarGearHub</a>
             <a class="active" href="index.php">Home</a>
-            <a href="#">Shop</a>
-            <a href="#">Cart</a>
-            <a href ="#"> About Us</a>
-            <a href="#">Contact Us</a>
-            <a href="login_form">Login</a>
+            <a href="#" onclick="showAlert()" >Shop</a>
+            <a href="#" onclick="showAlert()">Cart</a>
+            <a href ="#" onclick="showAlert()"> About Us</a>
+            <a href="#" onclick="showAlert()">Contact Us</a>
+            <a href="login_form.php">Login</a>
         </div>
     </nav>
+    
 
     <!--conetent of the website-->
     <div class="container">
@@ -47,6 +36,50 @@ if(!isset($_SESSION['user_name'])){
     
     </div>
 
+    <div id="laptop" class="section-p1">
+        <!-- <input type="text" name="text" class="inputsearch" placeholder="Search here..."> -->
+        <!-- <button class="search">search</button> -->
+        <h2>New Product</h2>
+        <p>Unlock Your Creativity</p>
+
+        <div class="pro-container">
+
+            <?php 
+            require 'config.php';
+
+            $query = "SELECT * FROM products";
+            $query_run = mysqli_query($conn,$query);
+            $check_products = mysqli_num_rows($query_run) > 0;
+
+            if($check_products){
+                while($row = mysqli_fetch_assoc($query_run))
+                {
+                    ?>
+                    <div class="pro">
+                        <img src="uploaded_img/<?php echo $row['image']; ?>" alt="product images">
+                        <div class="des">
+                            <h5> <?php echo $row['name']; ?> </h5>
+                            <div class="star">
+                                <li class="fas fa-star"></li>
+                                <li class="fas fa-star"></li>
+                                <li class="fas fa-star"></li>
+                                <li class="fas fa-star"></li>
+                                <li class="fas fa-star"></li>
+                            </div>
+                            <h4><?php echo $row['price']; ?></h4>
+                        </div>
+                        <a href="#" name="add_to_cart" onclick="showAlert()"><i class="fal fa-shopping-cart cart"></i></a>
+                    </div>
+                    <?php
+                }
+            }
+            else{
+                echo "No Product Found";
+            }
+            ?>
+
+        </div>
+    </div>
 
     <!--Product-->
     <div id="laptop" class="section-p1">
@@ -232,6 +265,11 @@ if(!isset($_SESSION['user_name'])){
             <p>&copy; 2025 eargearhub . All rights reserved</p>
         </div>
     </footer>
+    <script>
+        function showAlert() {
+        alert('Please Login First');
+        }
+    </script>
 </body>
 
 </html>

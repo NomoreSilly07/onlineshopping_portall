@@ -1,103 +1,272 @@
 <?php
-
-@include 'config.php';
-
 session_start();
+require 'config.php';
 
-$admin_id = $_SESSION['admin_id'];
+// Fetch orders from the database
+$order_query = "SELECT * FROM orders ORDER BY created_at DESC";
+$order_result = $conn->query($order_query);
 
-if(!isset($admin_id)){
-   header('location:login.php');
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
+    $order_id = $_POST['order_id'];
+    $status = $_POST['status'];
+
+    // Update the order status
+    $update_query = "UPDATE orders SET payment_status = ? WHERE id = ?";
+    if ($stmt = $conn->prepare($update_query)) {
+        $stmt->bind_param("si", $status, $order_id);
+        if ($stmt->execute()) {
+            echo "<script>alert('Order status updated successfully.'); window.location.href='product_orders.php';</script>";
+        } else {
+            echo "<script>alert('Failed to update order status.');</script>";
+        }
+    }
 }
-
-if(isset($_POST['update_order'])){
-
-   $order_update_id = $_POST['order_id'];
-   $update_payment = $_POST['update_payment'];
-   mysqli_query($conn, "UPDATE `orders` SET payment_status = '$update_payment' WHERE id = '$order_update_id'") or die('query failed');
-   $message[] = 'payment status has been updated!';
-
-}
-
-if(isset($_GET['delete'])){
-   $delete_id = $_GET['delete'];
-   mysqli_query($conn, "DELETE FROM `orders` WHERE id = '$delete_id'") or die('query failed');
-   header('location:admin_orders.php');
-}
-
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <meta charset="UTF-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>orders</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Orders</title>
+    <link rel="stylesheet" href="admin_style.css">
+    <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
 
-   <!-- font awesome cdn link  -->
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+            /* Body and font settings */
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                color: #333;
+            }
 
-   <!-- custom admin css file link  -->
-   <link rel="stylesheet" href="admin_style.css">
+            /* Header */
+            nav .header {
+                background-color: #333;
+                padding: 10px 20px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
 
+            nav .header .logo {
+                color: #fff;
+                font-size: 24px;
+                text-decoration: none;
+            }
+
+            nav .header a {
+                color: #fff;
+                text-decoration: none;
+                padding: 10px 15px;
+                margin: 0 10px;
+                font-size: 18px;
+            }
+
+            nav .header a:hover,
+            nav .header .active {
+                background-color: #f4a261;
+                border-radius: 5px;
+            }
+
+            /* Container */
+            .delete-btn:hover {
+                background-color: #c0392b;
+            }
+
+            /* Success and error messages */
+            .success {
+                color: #27ae60;
+                background-color: #d4edda;
+                padding: 10px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+            }
+
+            .error {
+                color: #c0392b;
+                background-color: #f8d7da;
+                padding: 10px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+            }
+
+            /* Footer */
+            footer {
+                text-align: center;
+                margin-top: 30px;
+                padding: 10px;
+                background-color: #333;
+                color: #fff;
+                font-size: 14px;
+                position: fixed;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                text-align: center;
+            }
+
+
+            footer p {
+                margin: 0;
+            }
+
+.container {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+}
+
+table th, table td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+table td {
+    color: #333;
+}
+
+/* Form Styles */
+form {
+    display: inline-block;
+    margin-top: 10px;
+}
+
+select {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    margin-right: 10px;
+    width: 120px;
+}
+
+button {
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+button:active {
+    background-color: #388e3c;
+}
+
+    </style>
 </head>
 <body>
-   
-<?php include 'admin_header.php'; ?>
+    <nav>
+        <div class="header">
+            <a href="admin_page.php" class="logo">Admin Panel</a>
+            <a href="admin_products.php">Products</a>
+            <a href="product_orders.php" class="active">Orders</a>
+            <a href="admin_contacts.php">Messages</a>
+            <a href="admin_user.php">Users</a>
+            <a href="logout.php" class="delete-btn">Logout</a>
+        </div>
+    </nav>
 
-<section class="orders">
+    <div class="container">
+    <h1>Admin - Order Management</h1>
 
-   <h1 class="title">placed orders</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>User Name</th>
+                <th>Email</th>
+                <th>Grand Total</th>
+                <th>Payment Method</th>
+                <th>Payment Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if ($order_result->num_rows > 0) {
+                while ($order = $order_result->fetch_assoc()) {
+                    $order_id = $order['id'];
+                    $user_name = $order['name'];
+                    $user_email = $order['email'];
+                    $grand_total = number_format($order['grand_total'], 2);
+                    $payment_method = $order['payment_method'];
+                    $payment_status = $order['payment_status'];
+            ?>
+            <tr>
+                <td><?= $order_id; ?></td>
+                <td><?= htmlspecialchars($user_name); ?></td>
+                <td><?= htmlspecialchars($user_email); ?></td>
+                <td>Rs. <?= $grand_total; ?>/-</td>
+                <td><?= htmlspecialchars($payment_method); ?></td>
+                <td><?= htmlspecialchars($payment_status); ?></td>
+                <td>
+                    <form action="" method="POST">
+                        <input type="hidden" name="order_id" value="<?= $order_id; ?>">
+                        <select name="status" required>
+                            <option value="Pending" <?= ($payment_status == 'Pending') ? 'selected' : ''; ?>>Pending</option>
+                            <option value="Completed" <?= ($payment_status == 'Completed') ? 'selected' : ''; ?>>Completed</option>
+                            <option value="Shipped" <?= ($payment_status == 'Shipped') ? 'selected' : ''; ?>>Shipped</option>
+                        </select>
+                        <button type="submit" name="update_status" class="btn">Update Status</button>
+                    </form>
+                </td>
+            </tr>
+            <?php
+                }
+            } else {
+                echo "<tr><td colspan='7'>No orders found.</td></tr>";
+            }
+            ?>
+        </tbody>
+    </table>
+    </div>
 
-   <div class="box-container">
-      <?php
-      $select_orders = mysqli_query($conn, "SELECT * FROM `orders`") or die('query failed');
-      if(mysqli_num_rows($select_orders) > 0){
-         while($fetch_orders = mysqli_fetch_assoc($select_orders)){
-      ?>
-      <div class="box">
-         <p> user id : <span><?php echo $fetch_orders['user_id']; ?></span> </p>
-         <p> placed on : <span><?php echo $fetch_orders['placed_on']; ?></span> </p>
-         <p> name : <span><?php echo $fetch_orders['name']; ?></span> </p>
-         <p> number : <span><?php echo $fetch_orders['number']; ?></span> </p>
-         <p> email : <span><?php echo $fetch_orders['email']; ?></span> </p>
-         <p> address : <span><?php echo $fetch_orders['address']; ?></span> </p>
-         <p> total products : <span><?php echo $fetch_orders['total_products']; ?></span> </p>
-         <p> total price : <span>$<?php echo $fetch_orders['total_price']; ?>/-</span> </p>
-         <p> payment method : <span><?php echo $fetch_orders['method']; ?></span> </p>
-         <form action="" method="post">
-            <input type="hidden" name="order_id" value="<?php echo $fetch_orders['id']; ?>">
-            <select name="update_payment">
-               <option value="" selected disabled><?php echo $fetch_orders['payment_status']; ?></option>
-               <option value="pending">pending</option>
-               <option value="completed">completed</option>
-            </select>
-            <input type="submit" value="update" name="update_order" class="option-btn">
-            <a href="admin_orders.php?delete=<?php echo $fetch_orders['id']; ?>" onclick="return confirm('delete this order?');" class="delete-btn">delete</a>
-         </form>
-      </div>
-      <?php
-         }
-      }else{
-         echo '<p class="empty">no orders placed yet!</p>';
-      }
-      ?>
-   </div>
-
-</section>
 
 
-
-
-
-
-
-
-
-
-<!-- custom admin js file link  -->
-<script src="js/admin_script.js"></script>
+    <footer>
+            <p>&copy; 2025 EarGearHub. All Rights Reserved.</p>
+    </footer>
 
 </body>
 </html>

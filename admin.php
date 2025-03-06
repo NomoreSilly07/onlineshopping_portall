@@ -2,10 +2,8 @@
 
 @include 'config.php';
 
-$id = $_GET['edit'];
 
 if(isset($_POST['update_product'])){
-
    $product_name = $_POST['product_name'];
    $product_price = $_POST['product_price'];
    $product_image = $_FILES['product_image']['name'];
@@ -14,20 +12,30 @@ if(isset($_POST['update_product'])){
 
    if(empty($product_name) || empty($product_price) || empty($product_image)){
       $message[] = 'please fill out all!';    
-   }else{
-
-      $update_data = "UPDATE products SET name='$product_name', price='$product_price', image='$product_image'  WHERE id = '$id'";
+   } else {
+      $update_data = "UPDATE products SET name='$product_name', price='$product_price', image='$product_image' WHERE id = '$id'";
       $upload = mysqli_query($conn, $update_data);
 
       if($upload){
          move_uploaded_file($product_image_tmp_name, $product_image_folder);
          header('location:admin_page.php');
-      }else{
-         $$message[] = 'please fill out all!'; 
+      } else {
+         $message[] = 'Failed to update product!'; 
       }
-
    }
-};
+}
+
+// Delete functionality
+if(isset($_POST['delete_product'])){
+   $delete_query = "DELETE FROM products WHERE id = '$id'";
+   $delete_result = mysqli_query($conn, $delete_query);
+
+   if($delete_result){
+      header('location:admin_page.php');
+   } else {
+      $message[] = 'Failed to delete product!';
+   }
+}
 
 ?>
 
@@ -50,34 +58,26 @@ if(isset($_POST['update_product'])){
 ?>
 
 <div class="container">
+   <div class="admin-product-form-container centered">
 
+      <?php
+         $select = mysqli_query($conn, "SELECT * FROM products WHERE id = '$id'");
+         while($row = mysqli_fetch_assoc($select)){
+      ?>
 
-<div class="admin-product-form-container centered">
+      <form action="" method="post" enctype="multipart/form-data">
+         <h3 class="title">Update the Product</h3>
+         <input type="text" class="box" name="product_name" value="<?php echo $row['name']; ?>" placeholder="Enter the product name">
+         <input type="number" min="0" class="box" name="product_price" value="<?php echo $row['price']; ?>" placeholder="Enter the product price">
+         <input type="file" class="box" name="product_image" accept="image/png, image/jpeg, image/jpg">
+         <input type="submit" value="Update Product" name="update_product" class="btn">
+         <input type="submit" value="Delete Product" name="delete_product" class="btn" style="background-color: red;">
+         <a href="admin_page.php" class="btn">Go Back!</a>
+      </form>
 
-   <?php
-      
-      $select = mysqli_query($conn, "SELECT * FROM products WHERE id = '$id'");
-      while($row = mysqli_fetch_assoc($select)){
+      <?php }; ?>
 
-   ?>
-   
-   <form action="" method="post" enctype="multipart/form-data">
-      <h3 class="title">update the product</h3>
-      <input type="text" class="box" name="product_name" value="<?php echo $row['name']; ?>" placeholder="enter the product name">
-      <input type="number" min="0" class="box" name="product_price" value="<?php echo $row['price']; ?>" placeholder="enter the product price">
-      <input type="file" class="box" name="product_image"  accept="image/png, image/jpeg, image/jpg">
-      <input type="submit" value="update product" name="update_product" class="btn">
-      <a href="admin_page.php" class="btn">go back!</a>
-   </form>
-   
-
-
-   <?php }; ?>
-
-   
-
-</div>
-
+   </div>
 </div>
 
 </body>

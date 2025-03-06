@@ -3,6 +3,16 @@
     padding: 0;
 }
 
+html {
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    /* padding-bottom: 5rem; */
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -110,97 +120,58 @@ body {
 }
 
 
-/* Container styling */
+/*feature*/
 
-.container {
-    width: 90%;
-    margin: auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
+#feature {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
-
-/* Table styling */
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background: #fff;
-}
-
-table th,
-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
+#feature .fe-box {
+    width: 180px;
     text-align: center;
+    padding: 25px 15px;
+    box-shadow: 20px 20px 34px rgba(0, 0, 0, 0.03);
+    border: 1px solid #cce7d0;
+    border-radius: 4px;
+    margin: 15px 0;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
-th {
-    background-color: #f4f4f4;
-    font-weight: bold;
+#feature .fe-box:hover {
+    box-shadow: 10px 10px 54px rgba(70, 62, 221, 0.1);
 }
 
-td img {
-    width: 80px;
-    height: auto;
-    border-radius: 5px;
+#feature .fe-box h6 {
+    display: inline-blockf;
+    padding: 9px 8px 6px 8px;
+    line-height: 1;
+    border-radius: 4px;
+    color: #088178;
+    background-color: #fddde4;
 }
 
-
-/* Buttons styling */
-
-.option-btn,
-.delete-btn,
-.btn {
-    display: inline-block;
-    padding: 8px 15px;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 14px;
-    text-align: center;
+#feature .fe-box:nth-child(2) h6 {
+    background-color: #cdebbc;
 }
 
-.option-btn {
-    background: #007bff;
-    color: white;
+#feature .fe-box:nth-child(3) h6 {
+    background-color: #fff2e5;
 }
 
-.delete-btn {
-    background: #dc3545;
-    color: white;
+#feature .fe-box:nth-child(4) h6 {
+    background-color: #cdd4f8;
 }
 
-.btn {
-    background: #28a745;
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-}
-
-.disabled {
-    background: #ccc;
-    pointer-events: none;
-}
-
-
-/* Checkout button */
-
-.checkout-btn {
-    text-align: right;
-    margin-top: 20px;
+#feature .fe-box:nth-child(5) h6 {
+    background-color: #f6dbf6;
 }
 
 
 /*footer*/
-
-footer {
-    text-align: center;
-    position: sticky;
-    bottom: 0;
-    width: 100%;
-    text-align: center;
-}
 
 .footer-container {
     width: 100%;
@@ -209,6 +180,8 @@ footer {
     justify-content: center;
     background-color: #8d99ae;
     color: #2b2d42;
+    position: fixed;
+    bottom: 0;
 }
 
 .footer-content {
@@ -293,4 +266,51 @@ section.left .socialMedia {
     margin: 0;
     font-size: 16px;
     padding: 7px;
+}
+
+.h1 {
+    text-align: center;
+    font-size: 30px;
+}
+
+.checkout-form form {
+    padding: 2rem;
+    border-radius: .5rem;
+    background-color: var(--bg-color);
+    border: 1px solid black;
+}
+
+.checkout-form form label {
+    text-align: center;
+}
+
+.checkout-form form .flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.checkout-form form .flex .inputBox {
+    flex: 1 1 40rem;
+}
+
+.checkout-form form .flex .inputBox input,
+.checkout-form form .flex .inputBox select {
+    width: 95%;
+    margin: 1rem 0;
+    padding: 1.2rem 1.4rem;
+    text-transform: none;
+}
+
+.btn,
+.option-btn,
+.delete-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 1.7rem;
+    padding: 1.2rem 3rem;
+    border-radius: .5rem;
+    cursor: pointer;
+    margin-top: 1rem;
 }

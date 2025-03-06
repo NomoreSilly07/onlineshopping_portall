@@ -4,15 +4,16 @@
 
 session_start();
 
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error()); // Handle database connection error
+}
+
 if(isset($_POST['submit'])){
 
-   $name = mysqli_real_escape_string($conn, $_POST['name']);
    $email = mysqli_real_escape_string($conn, $_POST['email']);
    $pass = md5($_POST['password']);
-   $cpass = md5($_POST['cpassword']);
-   $user_type = $_POST['user_type'];
 
-   $select = " SELECT * FROM user_form WHERE email = '$email' && password = '$pass' ";
+   $select = " SELECT * FROM user_form WHERE email = '$email' ";
 
    $result = mysqli_query($conn, $select);
 
@@ -20,23 +21,25 @@ if(isset($_POST['submit'])){
 
       $row = mysqli_fetch_array($result);
 
-      if($row['user_type'] == 'admin'){
-
-         $_SESSION['admin_name'] = $row['name'];
-         header('location:admin_page.php');
-
-      }elseif($row['user_type'] == 'user'){
-
-         $_SESSION['user_name'] = $row['name'];
-         header('location:user_page.php');
-
+      if($row['password'] === $pass) { // Check password after selecting the user
+         if($row['user_type'] == 'admin'){
+            $_SESSION['admin_name'] = $row['name'];
+            header('location:admin_page.php');
+            exit();
+         } elseif($row['user_type'] == 'user'){
+            $_SESSION['user_name'] = $row['name'];
+            header('location:user_page.php');
+            exit();
+         }
+      } else {
+         $error[] = 'Incorrect email or password!';
       }
-     
-   }else{
-      $error[] = 'incorrect email or password!';
-   }
 
-};
+   } else {
+      $error[] = 'Incorrect email or password!';
+   }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -59,12 +62,19 @@ if(isset($_POST['submit'])){
         <div class="header">
         <a href="index.php" class="logo">EarGearHub</a>
             <a class="active" href="index.php">Home</a>
-            <a href="#">Shop</a>
-            <a href="#">Cart</a>
-            <a href ="#"> About Us</a>
-            <a href="#">Contact Us</a>
+            <a class="Link" href="#">Shop</a>
+            <a class="Link" href="#">Cart</a>
+            <a class="Link" href ="#"> About Us</a>
+            <a class="Link" href="#">Contact Us</a>
             <a class="active" href="login_form.php">Login</a>
         </div>
+        <script>
+            let link =document.querySelector("Link");
+            link.addEventListener("click", function(event){
+               alert("Please Login First");
+               event.preventDefault();
+            });
+        </script>
    </nav>
    <div class="form-container">
 

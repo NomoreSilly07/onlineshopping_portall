@@ -1,3 +1,8 @@
+<?php
+
+@include 'config.php';
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,8 +29,8 @@
             </a>
 
             <div class="account-box">
-                <a href="logout.php" class="delete-btn">logout</a>
-                <div>new <a href="login_form.php">login</a> | <a href="register_form.php">register</a></div>
+                <p>Username: <span><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Guest'); ?></span></p>
+                <a href="logout.php" class="delete-btn">Logout</a>
             </div>
 <script>
     let accountBox = document.querySelector('.header .account-box');
@@ -47,7 +52,19 @@
 </script>
         </div>
     </nav>
-    <div><h1>About us Page</h1></div>
+    <div class="about-us">
+        <div class="container">
+            <h1>About Us</h1>
+            <section>
+                <div>
+                    <p>Welcome to <strong>Laptop World</strong>, your one-stop destination for the latest and greatest laptops. We are passionate about technology and committed to providing our customers with the best products and services.</p>
+                    <p>Our mission is to make cutting-edge technology accessible to everyone. Whether you're a student, a professional, or a gaming enthusiast, we have the perfect laptop to meet your needs.</p>
+                    <p>At Laptop World, we believe in quality, reliability, and customer satisfaction. Our team of experts carefully selects each product to ensure that you get the best value for your money.</p>
+                    <p>Thank you for choosing Laptop World. We look forward to serving you and helping you find the perfect laptop for your lifestyle.</p>
+                </div>
+            </section> 
+        </div>
+    </div>
     <div id="feature" class="section-p1">
         <div class="fe-box">
             <img src="features/f2.png" alt="">

@@ -1,6 +1,11 @@
+<?php
+
+session_start();
+require 'config.php';
+
+?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,8 +32,8 @@
             </a>
 
             <div class="account-box">
+                <p>username : <span> <?php echo $_SESSION['user_name']; ?></span></p>
                 <a href="logout.php" class="delete-btn">logout</a>
-                <div>new <a href="login_form.php">login</a> | <a href="register_form.php">register</a></div>
             </div>
 <script>
     let accountBox = document.querySelector('.header .account-box');
@@ -78,30 +83,39 @@
             if($check_products){
                 while($row = mysqli_fetch_assoc($query_run))
                 {
-                    ?>
-                    <div class="pro">
-                        <img src="uploaded_img/<?php echo $row['image']; ?>" alt="product images">
-                        <div class="des">
-                            <h5> <?php echo $row['name']; ?> </h5>
-                            <div class="star">
-                                <li class="fas fa-star"></li>
-                                <li class="fas fa-star"></li>
-                                <li class="fas fa-star"></li>
-                                <li class="fas fa-star"></li>
-                                <li class="fas fa-star"></li>
-                            </div>
-                            <h4><?php echo $row['price']; ?></h4>
-                        </div>
-                        <a href="#"><i class="fal fa-shopping-cart cart"></i></a>
-                    </div>
-                    <?php
-                }
-            }
-            else{
-                echo "No Product Found";
-            }
             ?>
-
+            
+                <div class="pro">
+                    <img src="uploaded_img/<?php echo $row['image']; ?>" alt="product images">
+                    <div class="des">
+                        <h5> <?php echo $row['name']; ?> </h5>
+                        <div class="star">
+                            <li class="fas fa-star"></li>
+                            <li class="fas fa-star"></li>
+                            <li class="fas fa-star"></li>
+                            <li class="fas fa-star"></li>
+                            <li class="fas fa-star"></li>
+                        </div>
+                        <h4><?php echo $row['price']; ?></h4>
+                    </div>
+                    <form method="POST" action="cart.php">
+                        <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                        <input type="hidden" name="image" value="<?php echo $row['image']; ?>">
+                        <input type="hidden" name="name" value="<?php echo $row['name']; ?>"> 
+                        <input type="hidden" name="price" value="<?php echo $row['price']; ?>">
+                        <input type="number" value="1" name="quantity">
+                        <button name="add_to_cart" type="submit"><i class="fal fa-shopping-cart cart"></i></button>
+                    </form>
+                </div>
+             
+                <?php
+                    }
+                }
+                else{
+                    echo "No Product Found";
+                }
+                ?>
+            
         </div>
     </div>
 
